@@ -282,17 +282,23 @@ main {
 
 .sh-hero-new-media {
   position: relative;
-  line-height: 0; /* Remove potential bottom gap */
+  line-height: 0;
+  padding-left: 40px;
+  overflow: hidden; /* Necessary for Ken Burns animation */
+  /* Blend mask moved to container to keep it static while photo zooms */
+  mask-image: linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%);
 }
 
 .sh-hero-blend-img {
   width: 100%;
   height: auto;
+  max-height: 750px;
   object-fit: cover;
+  object-position: bottom center;
   display: block;
-  /* Use a gradient mask to blend into the background on the right */
-  mask-image: linear-gradient(to right, black 85%, transparent 100%);
-  -webkit-mask-image: linear-gradient(to right, black 85%, transparent 100%);
+  animation: ken-burns 20s ease-in-out infinite alternate;
+  transform-origin: bottom center;
 }
 
 .sh-hero-new-copy {
@@ -307,7 +313,19 @@ main {
 .sh-hero-new-copy h1 {
   font-size: clamp(3rem, 5vw, 4.5rem);
   font-family: var(--sh-font-serif);
-  margin-bottom: 24px;
+  margin-bottom: 12px;
+  line-height: 0.85;
+  letter-spacing: -0.015em;
+}
+
+.sh-hero-tagline {
+  font-family: var(--sh-font-sans);
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--sh-evergreen);
+  margin-bottom: 28px;
 }
 
 .sh-hero-new-copy .sh-hero-subtitle {
@@ -319,6 +337,13 @@ main {
 @media (max-width: 900px) {
   .sh-hero-new-grid {
     grid-template-columns: 1fr;
+  }
+  
+  .sh-hero-new-media {
+    padding-left: 0;
+    mask-image: none;
+    -webkit-mask-image: none;
+    overflow: visible;
   }
   
   .sh-hero-blend-img {
@@ -1496,4 +1521,25 @@ main {
   .sh-cta-btns .sh-btn {
     min-height: 44px;
   }
+}
+/* --- REVEAL ANIMATIONS --- */
+.sh-reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 1s cubic-bezier(0.23, 1, 0.32, 1), 
+              transform 1s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.sh-reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.sh-delay-1 { transition-delay: 0.15s; }
+.sh-delay-2 { transition-delay: 0.3s; }
+.sh-delay-3 { transition-delay: 0.45s; }
+
+@keyframes ken-burns {
+  0% { transform: scale(1.0); }
+  100% { transform: scale(1.08); } /* Much subtler high-end zoom */
 }
